@@ -167,9 +167,9 @@ impl Colour {
         let total_count = max[4];
 
         Self::new([
-            (total_red / total_count).round() as u8,
-            (total_green / total_count).round() as u8,
-            (total_blue / total_count).round() as u8,
+            (total_red / total_alpha).round() as u8,
+            (total_green / total_alpha).round() as u8,
+            (total_blue / total_alpha).round() as u8,
             (total_alpha / total_count).round() as u8,
         ])
     }

@@ -9,7 +9,7 @@ export async function run() {
   const __dirname = path.dirname(__filename);
 
   const profileImageBytes = await Bun.file(
-    path.join(__dirname, "../profile_image-300x300.png"),
+    path.join(__dirname, "../profile_image-300x300-emiru.png"),
   ).arrayBuffer();
   const profileImageBuffer = Buffer.from(profileImageBytes);
 
@@ -24,7 +24,7 @@ export async function run() {
 
   const base64Url = `data:${imageType?.mime};base64,${base64}`;
 
-  log(base64Url);
+  // log(base64Url);
 }
 
 if (import.meta.main) {

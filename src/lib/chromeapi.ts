@@ -131,6 +131,9 @@ export async function getChannelInfo(): Promise<void> {
           //   width: 100,
           //   height: 100,
           // });
+          console.log("red", col.red);
+          console.log("green", col.green);
+          console.log("blue", col.blue);
           const withImage: TwitchStream = {
             ...stream,
             profile_image_url: base64Url,

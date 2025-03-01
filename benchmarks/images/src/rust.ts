@@ -8,7 +8,7 @@ export async function run() {
   const __dirname = path.dirname(__filename);
 
   const profileImageBytes = await Bun.file(
-    path.join(__dirname, "../profile_image-300x300.png"),
+    path.join(__dirname, "../profile_image-300x300-emiru.png"),
   ).bytes();
 
   await init();
@@ -25,7 +25,7 @@ export async function run() {
 
   const base64 = image.to_base64();
 
-  log(base64);
+  // log(base64);
 }
 
 if (import.meta.main) {
