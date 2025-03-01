@@ -8,7 +8,8 @@
   "license": "MIT",
   "author": "Juliette Cordor",
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "benchmarks/*"
   ],
   "scripts": {
     "build": "bun run build:wasm && bun run clean && rspack build --mode production",

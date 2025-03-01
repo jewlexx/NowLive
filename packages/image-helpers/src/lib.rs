@@ -27,6 +27,12 @@ pub struct Image {
 
 #[wasm_bindgen]
 impl Image {
+    pub fn from_bytes(bytes: web_sys::js_sys::Uint8Array) -> Self {
+        Self {
+            bytes: bytes::Bytes::from(bytes.to_vec()),
+        }
+    }
+
     pub async fn download_url(url: String) -> Self {
         log!("Downloading {url}...");
         let bytes = reqwest::get(url).await.unwrap().bytes().await.unwrap();
