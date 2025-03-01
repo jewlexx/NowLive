@@ -13,7 +13,9 @@ export async function run() {
   ).arrayBuffer();
   const profileImageBuffer = Buffer.from(profileImageBytes);
 
-  const colour = await getAverageColor(profileImageBuffer);
+  const colour = await getAverageColor(profileImageBuffer, {
+    algorithm: "dominant",
+  });
 
   log(colour.rgba);
 

@@ -14,7 +14,7 @@ export async function run() {
   await init();
 
   const image = Image.from_bytes(profileImageBytes);
-  const colour = image.average_color();
+  const colour = image.average_color_dominant();
 
   const red = colour.red;
   const green = colour.green;
