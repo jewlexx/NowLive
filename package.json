@@ -29,7 +29,7 @@
   "dependencies": {
     "@fontsource/inter": "^5.1.1",
     "@formkit/auto-animate": "^0.8.2",
-    "image-helpers": "workspace:*",
+    "fast-average-color": "^9.4.0",
     "motion": "12.4.7",
     "react": "19.0.0",
     "react-dom": "19.0.0",
