@@ -122,10 +122,19 @@ impl Colour {
     }
 
     fn dominant_algorithm(image: DynamicImage) -> Self {
+        #[derive(Debug, Copy, Clone, Default)]
+        struct DomTotals {
+            red: f32,
+            green: f32,
+            blue: f32,
+            alpha: f32,
+            count: u32,
+        }
+
         const DEFAULT_DOMINANT_DIVIDER: f32 = 24.0;
 
-        let mut color_hash = nohash_hasher::IntMap::<u32, [f32; 5]>::default();
-        let mut max = [0f32; 5];
+        let mut color_hash = nohash_hasher::IntMap::<u32, DomTotals>::default();
+        let mut max = DomTotals::default();
 
         let pixels = image.pixels();
 
@@ -144,27 +153,36 @@ impl Colour {
             ]);
 
             let color_entry = if let Some(color_entry) = color_hash.get_mut(&key) {
-                color_entry[0] += red * alpha;
-                color_entry[1] += green * alpha;
-                color_entry[2] += blue * alpha;
-                color_entry[3] += alpha;
-                color_entry[4] += 1.0;
+                color_entry.red += red * alpha;
+                color_entry.green += green * alpha;
+                color_entry.blue += blue * alpha;
+                color_entry.alpha += alpha;
+                color_entry.count += 1;
                 color_entry
             } else {
-                color_hash.insert(key, [red * alpha, green * alpha, blue * alpha, alpha, 1.0]);
+                color_hash.insert(
+                    key,
+                    DomTotals {
+                        red: red * alpha,
+                        green: green * alpha,
+                        blue: blue * alpha,
+                        alpha,
+                        count: 1,
+                    },
+                );
                 unsafe { color_hash.get_mut(&key).unwrap_unchecked() }
             };
 
-            if max[4] < color_entry[4] {
+            if max.count < color_entry.count {
                 max = *color_entry;
             }
         }
 
-        let total_red = max[0];
-        let total_green = max[1];
-        let total_blue = max[2];
-        let total_alpha = max[3];
-        let total_count = max[4];
+        let total_red = max.red;
+        let total_green = max.green;
+        let total_blue = max.blue;
+        let total_alpha = max.alpha;
+        let total_count = max.count as f32;
 
         Self::new([
             (total_red / total_alpha).round() as u8,
