@@ -12,8 +12,7 @@
     "benchmarks/*"
   ],
   "scripts": {
-    "build": "bun run build:wasm && bun run clean && rspack build --mode production",
-    "build:wasm": "cd packages/image-helpers && bun run build",
+    "build": "bun run clean && rspack build --mode production",
     "cargo": "cd image-helpers && cargo",
     "clean": "rimraf dist",
     "dev": "rspack build --mode development",
@@ -79,7 +78,6 @@
     "ts-node": "^10.9.2",
     "typescript": "5.7.3",
     "typescript-eslint": "^8.25.0",
-    "wasm-pack": "0.13.1",
     "web-ext": "8.4.0",
     "webpack-merge": "^6.0.1"
   },
@@ -91,7 +89,6 @@
     "lmdb",
     "msgpackr-extract",
     "sharp",
-    "spawn-sync",
-    "wasm-pack"
+    "spawn-sync"
   ]
 }
