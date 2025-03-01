@@ -1,15 +1,9 @@
-import init, { initialize } from "image-helpers";
 import {
   getChannelInfo,
   setStorageIfNull,
   setStorageLocalIfNull,
 } from "../lib/chromeapi";
 import validateToken from "../lib/validateToken";
-
-async function initializeWasm() {
-  await init();
-  initialize();
-}
 
 browser.alarms.create("NowLive:Refresh", {
   // delayInMinutes: 1,
@@ -48,8 +42,6 @@ browser.runtime.onMessage.addListener((message, sender, res) => {
 });
 
 (async () => {
-  await initializeWasm();
-
   browser.alarms.onAlarm.addListener(async (alarm) => {
     if (alarm.name === "NowLive:Refresh") {
       await getChannelInfo();

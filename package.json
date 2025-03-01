@@ -13,7 +13,6 @@
   ],
   "scripts": {
     "build": "bun run clean && rspack build --mode production",
-    "cargo": "cd image-helpers && cargo",
     "clean": "rimraf dist",
     "dev": "rspack build --mode development",
     "fmt": "prettier --write ./src/*/**.{ts,tsx} --ignore-path .gitignore",
@@ -84,7 +83,6 @@
   "trustedDependencies": [
     "@swc/core",
     "core-js",
-    "image-helpers",
     "install-peers",
     "lmdb",
     "msgpackr-extract",
