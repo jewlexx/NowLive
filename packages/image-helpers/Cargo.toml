@@ -1,8 +1,8 @@
 [package]
-name = "image-helpers"
-version = "0.1.0"
 authors = ["Juliette Cordor"]
 edition = "2018"
+name = "image-helpers"
+version = "0.1.0"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
@@ -11,25 +11,23 @@ crate-type = ["cdylib", "rlib"]
 default = ["console_error_panic_hook"]
 
 [dependencies]
-wasm-bindgen = "0.2.84"
+wasm-bindgen = "0.2"
 
 # The `console_error_panic_hook` crate provides better debugging of panics by
 # logging them with `console.error`. This is great for development, but requires
 # all the `std::fmt` and `std::panicking` infrastructure, so isn't great for
 # code size when deploying.
+base64 = "0.22"
+bytes = { version = "1.5", features = ["serde"], default-features = false }
 console_error_panic_hook = { version = "0.1.7", optional = true }
-reqwest = "0.11.20"
-base64 = "0.21.4"
-wasm-bindgen-futures = "0.4.37"
-bytes = { version = "1.5.0", features = ["serde"] }
-image = "0.24.7"
-serde = { version = "1.0.188", features = ["derive"] }
+image = "0.25"
+reqwest = "0.12"
+serde = { version = "1.0", features = ["derive"] }
+wasm-bindgen-futures = "0.4"
 
 [dependencies.web-sys]
+features = ["console"]
 version = "0.3"
-features = [
-  "console",
-]
 
 [dev-dependencies]
-wasm-bindgen-test = "0.3.34"
+wasm-bindgen-test = "0.3"
