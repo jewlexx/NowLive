@@ -4,17 +4,17 @@ import getImageType from "image-type";
 import path from "path";
 import { log } from "./logging";
 
-export async function run() {
+export async function run(algorithm: "sqrt" | "dominant" = "sqrt") {
   const __filename = fileURLToPath(import.meta.url);
   const __dirname = path.dirname(__filename);
 
   const profileImageBytes = await Bun.file(
-    path.join(__dirname, "../profile_image-300x300-emiru.png"),
+    path.join(__dirname, "../profile_image-300x300.png"),
   ).arrayBuffer();
   const profileImageBuffer = Buffer.from(profileImageBytes);
 
   const colour = await getAverageColor(profileImageBuffer, {
-    algorithm: "dominant",
+    algorithm,
   });
 
   log(colour.rgba);

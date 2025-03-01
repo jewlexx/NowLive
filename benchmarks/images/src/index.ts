@@ -5,8 +5,10 @@ import { run as node } from "./node";
 
 boxplot(() => {
   summary(() => {
-    bench("rust", rust);
-    bench("node", node);
+    bench("rust sqrt", () => rust("sqrt"));
+    bench("node sqrt", () => node("sqrt"));
+    bench("rust dominant", () => rust("dominant"));
+    bench("node dominant", () => node("dominant"));
   });
 });
 
