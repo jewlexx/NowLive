@@ -48,9 +48,14 @@ impl Image {
         format!("data:{};base64,{data}", image_format.to_mime_type())
     }
 
-    pub fn average_color(&self) -> Colour {
+    pub fn average_color_sqrt(&self) -> Colour {
         let image = image::load_from_memory(&self.bytes).expect("valid image loaded");
         Colour::sqrt_algorithm(image)
+    }
+
+    pub fn average_color_dominant(&self) -> Colour {
+        let image = image::load_from_memory(&self.bytes).expect("valid image loaded");
+        Colour::dominant_algorithm(image)
     }
 }
 
@@ -114,5 +119,57 @@ impl Colour {
         let alpha = (alpha_total / count as f64).round();
 
         Self::new([red as u8, green as u8, blue as u8, alpha as u8])
+    }
+
+    fn dominant_algorithm(image: DynamicImage) -> Self {
+        const DEFAULT_DOMINANT_DIVIDER: f64 = 24.0;
+
+        let mut color_hash = hashbrown::HashMap::<[u64; 3], [f64; 5]>::new();
+        let mut max = [0f64; 5];
+
+        let pixels = image.pixels();
+
+        for pixel in pixels {
+            // Extract the RGBA values from the pixel
+            let [red, green, blue, alpha] = {
+                let [red, green, blue, alpha] = pixel.2 .0;
+                [red as f64, green as f64, blue as f64, alpha as f64]
+            };
+
+            let key = [
+                (red / DEFAULT_DOMINANT_DIVIDER).round() as u64,
+                (green / DEFAULT_DOMINANT_DIVIDER).round() as u64,
+                (blue / DEFAULT_DOMINANT_DIVIDER).round() as u64,
+            ];
+
+            let color_entry = if let Some(color_entry) = color_hash.get_mut(&key) {
+                color_entry[0] += red * alpha;
+                color_entry[1] += green * alpha;
+                color_entry[2] += blue * alpha;
+                color_entry[3] += alpha;
+                color_entry[4] += 1.0;
+                color_entry
+            } else {
+                color_hash.insert(key, [red * alpha, green * alpha, blue * alpha, alpha, 1.0]);
+                color_hash.get_mut(&key).unwrap()
+            };
+
+            if max[4] < color_entry[4] {
+                max = *color_entry;
+            }
+        }
+
+        let total_red = max[0];
+        let total_green = max[1];
+        let total_blue = max[2];
+        let total_alpha = max[3];
+        let total_count = max[4];
+
+        Self::new([
+            (total_red / total_count).round() as u8,
+            (total_green / total_count).round() as u8,
+            (total_blue / total_count).round() as u8,
+            (total_alpha / total_count).round() as u8,
+        ])
     }
 }
