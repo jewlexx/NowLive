@@ -129,11 +129,7 @@ export async function getChannelInfo(): Promise<void> {
             "content-type",
           )};base64,${base64}`;
           const col = await fac.getColorAsync(base64Url);
-          console.log({
-            colourHex: col.hex,
-            colorRgb: col.rgb,
-            isLight: col.isLight,
-          });
+
           const withImage: TwitchStream = {
             ...stream,
             profile_image_url: base64Url,
