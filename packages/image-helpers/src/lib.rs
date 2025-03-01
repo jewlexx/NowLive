@@ -122,10 +122,10 @@ impl Colour {
     }
 
     fn dominant_algorithm(image: DynamicImage) -> Self {
-        const DEFAULT_DOMINANT_DIVIDER: f32 = 24.0;
+        const DEFAULT_DOMINANT_DIVIDER: u8 = 24;
 
-        let mut color_hash = nohash_hasher::IntMap::<u32, [f32; 5]>::default();
-        let mut max = [0f32; 5];
+        let mut color_hash = nohash_hasher::IntMap::<u32, [u8; 5]>::default();
+        let mut max = [0; 5];
 
         let pixels = image.pixels();
 
@@ -133,13 +133,14 @@ impl Colour {
             // Extract the RGBA values from the pixel
             let [red, green, blue, alpha] = {
                 let [red, green, blue, alpha] = pixel.2 .0;
-                [red as f32, green as f32, blue as f32, alpha as f32]
+                // [red as f32, green as f32, blue as f32, alpha as f32]
+                [red, green, blue, alpha]
             };
 
             let key = u32::from_le_bytes([
-                (red / DEFAULT_DOMINANT_DIVIDER).round() as u8,
-                (green / DEFAULT_DOMINANT_DIVIDER).round() as u8,
-                (blue / DEFAULT_DOMINANT_DIVIDER).round() as u8,
+                (red / DEFAULT_DOMINANT_DIVIDER),
+                (green / DEFAULT_DOMINANT_DIVIDER),
+                (blue / DEFAULT_DOMINANT_DIVIDER),
                 0,
             ]);
 
@@ -148,10 +149,10 @@ impl Colour {
                 color_entry[1] += green * alpha;
                 color_entry[2] += blue * alpha;
                 color_entry[3] += alpha;
-                color_entry[4] += 1.0;
+                color_entry[4] += 1;
                 color_entry
             } else {
-                color_hash.insert(key, [red * alpha, green * alpha, blue * alpha, alpha, 1.0]);
+                color_hash.insert(key, [red * alpha, green * alpha, blue * alpha, alpha, 1]);
                 unsafe { color_hash.get_mut(&key).unwrap_unchecked() }
             };
 
@@ -167,10 +168,10 @@ impl Colour {
         let total_count = max[4];
 
         Self::new([
-            (total_red / total_count).round() as u8,
-            (total_green / total_count).round() as u8,
-            (total_blue / total_count).round() as u8,
-            (total_alpha / total_count).round() as u8,
+            (total_red / total_count),
+            (total_green / total_count),
+            (total_blue / total_count),
+            (total_alpha / total_count),
         ])
     }
 }
