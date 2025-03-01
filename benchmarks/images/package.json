@@ -12,6 +12,7 @@
   "dependencies": {
     "fast-average-color-node": "^3.1.0",
     "image-helpers": "workspace:*",
-    "image-type": "^5.2.0"
+    "image-type": "^5.2.0",
+    "mitata": "^1.0.34"
   }
 }
