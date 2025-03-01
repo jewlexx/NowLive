@@ -12,9 +12,8 @@ export interface TwitchUser {
 }
 
 export interface TwitchColour {
-  red: number;
-  green: number;
-  blue: number;
+  colourHex: string;
+  colorRgb: string;
   isLight: boolean;
 }
 

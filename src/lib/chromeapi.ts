@@ -1,8 +1,9 @@
-import { Image } from "image-helpers";
+import { useCallback, useEffect, useState } from "react";
+import { FastAverageColor } from "fast-average-color";
+import { base64ArrayBuffer } from "./arrayBufferBase64";
 import { clientId } from "./lib";
 import type { Key } from "../types/chrome";
 import type { TwitchStream, TwitchUser } from "../types/twitch";
-import { useCallback, useEffect, useState } from "react";
 import { Theme } from "../theme";
 
 export type ResolveNew<T> = T | ((prevState: T) => T);
@@ -114,37 +115,28 @@ export async function getChannelInfo(): Promise<void> {
       return withicon;
     });
 
-    // const fac = new FastAverageColor();
+    const fac = new FastAverageColor();
 
     // Downloads the images and converts them into a base64 url
     const withImages = await Promise.all(
       withicons.map(async (stream) => {
         const url = stream.profile_image_url;
         if (url.startsWith("https://static-cdn.jtvnw.net/")) {
-          // TODO: Maybe move to wasm for some of this
-          const image = await Image.download_url(stream.profile_image_url);
-          const base64Url = image.to_base64();
-          const col = image.average_color_dominant();
-          // const blob = await (await fetch(stream.profile_image_url)).blob();
-          // const base64Url = await blobToBase64(blob);
-          // const col = await fac.getColorAsync(base64Url, {
-          //   width: 100,
-          //   height: 100,
-          // });
-          console.log("red", col.red);
-          console.log("green", col.green);
-          console.log("blue", col.blue);
+          const response = await fetch(stream.profile_image_url);
+          const bytes = await response.arrayBuffer();
+          const base64 = encodeURIComponent(base64ArrayBuffer(bytes));
+          const base64Url = `data:${response.headers.get(
+            "content-type",
+          )};base64,${base64}`;
+          const col = await fac.getColorAsync(base64Url);
+
           const withImage: TwitchStream = {
             ...stream,
             profile_image_url: base64Url,
             average_color: {
-              // The `Colour` class uses wasm pointers,
-              // so we must get all the data from them and
-              // put it in a regular object to persist even when the wasm runtime leaves memory
-              red: col.red,
-              green: col.green,
-              blue: col.blue,
-              isLight: col.is_light(),
+              colourHex: col.hex,
+              colorRgb: col.rgb,
+              isLight: col.isLight,
             },
           };
 

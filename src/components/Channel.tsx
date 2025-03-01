@@ -4,7 +4,8 @@ import FavoriteButton from "./buttons/FavoriteButton";
 import { useMemo } from "react";
 
 function parseRgba(colour: TwitchColour) {
-  return `rgba(${colour.red},${colour.green},${colour.blue},0.7)`;
+  const justColours = colour.colorRgb.replace("rgb(", "").replace(")", "");
+  return `rgba(${justColours},0.7)`;
 }
 
 interface ChannelProps {
@@ -39,6 +40,8 @@ function Channel({
     return title;
   }, [title]);
 
+  const parsedColour = average_color ? parseRgba(average_color) : "#000";
+
   return (
     <div
       title={title}
@@ -48,9 +51,9 @@ function Channel({
       <motion.button
         className="m-2.5 h-32 w-[80vw] cursor-pointer rounded-2xl border-none bg-none"
         style={{
-          backgroundColor: average_color ? parseRgba(average_color) : "#000",
+          backgroundColor: parsedColour,
           color: average_color?.isLight ? "#000" : "#FFF",
-          boxShadow: `0 0 10px ${average_color ? parseRgba(average_color) : "#000"}`,
+          boxShadow: `0 0 10px ${parsedColour}`,
         }}
         onClick={() => window.open(`https://twitch.tv/${user_login}`)}
         type="button"

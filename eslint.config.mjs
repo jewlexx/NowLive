@@ -1,3 +1,5 @@
+// @ts-check
+
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import tseslint from "typescript-eslint";
@@ -20,6 +22,7 @@ export default tseslint.config(
   js.configs.recommended,
   tseslint.configs.strict,
   tseslint.configs.stylistic,
+  // @ts-expect-error reacts fault not mine
   reactCompiler.configs.recommended,
   {
     ...pluginReact.configs.flat.recommended,
