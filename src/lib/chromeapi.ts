@@ -124,7 +124,7 @@ export async function getChannelInfo(): Promise<void> {
           // TODO: Maybe move to wasm for some of this
           const image = await Image.download_url(stream.profile_image_url);
           const base64Url = image.to_base64();
-          const col = image.average_color();
+          const col = image.average_color_dominant();
           // const blob = await (await fetch(stream.profile_image_url)).blob();
           // const base64Url = await blobToBase64(blob);
           // const col = await fac.getColorAsync(base64Url, {
