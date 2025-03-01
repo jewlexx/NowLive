@@ -122,10 +122,10 @@ impl Colour {
     }
 
     fn dominant_algorithm(image: DynamicImage) -> Self {
-        const DEFAULT_DOMINANT_DIVIDER: f64 = 24.0;
+        const DEFAULT_DOMINANT_DIVIDER: f32 = 24.0;
 
-        let mut color_hash = hashbrown::HashMap::<[u64; 3], [f64; 5]>::new();
-        let mut max = [0f64; 5];
+        let mut color_hash = nohash_hasher::IntMap::<u32, [f32; 5]>::default();
+        let mut max = [0f32; 5];
 
         let pixels = image.pixels();
 
@@ -133,14 +133,15 @@ impl Colour {
             // Extract the RGBA values from the pixel
             let [red, green, blue, alpha] = {
                 let [red, green, blue, alpha] = pixel.2 .0;
-                [red as f64, green as f64, blue as f64, alpha as f64]
+                [red as f32, green as f32, blue as f32, alpha as f32]
             };
 
-            let key = [
-                (red / DEFAULT_DOMINANT_DIVIDER).round() as u64,
-                (green / DEFAULT_DOMINANT_DIVIDER).round() as u64,
-                (blue / DEFAULT_DOMINANT_DIVIDER).round() as u64,
-            ];
+            let key = u32::from_le_bytes([
+                (red / DEFAULT_DOMINANT_DIVIDER).round() as u8,
+                (green / DEFAULT_DOMINANT_DIVIDER).round() as u8,
+                (blue / DEFAULT_DOMINANT_DIVIDER).round() as u8,
+                0,
+            ]);
 
             let color_entry = if let Some(color_entry) = color_hash.get_mut(&key) {
                 color_entry[0] += red * alpha;
@@ -151,7 +152,7 @@ impl Colour {
                 color_entry
             } else {
                 color_hash.insert(key, [red * alpha, green * alpha, blue * alpha, alpha, 1.0]);
-                color_hash.get_mut(&key).unwrap()
+                unsafe { color_hash.get_mut(&key).unwrap_unchecked() }
             };
 
             if max[4] < color_entry[4] {

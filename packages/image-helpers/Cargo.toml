@@ -25,6 +25,7 @@ reqwest = "0.12"
 serde = { version = "1.0", features = ["derive"] }
 wasm-bindgen-futures = "0.4"
 hashbrown = "0.15.2"
+nohash-hasher = "0.2.0"
 
 [dependencies.web-sys]
 features = ["console"]
